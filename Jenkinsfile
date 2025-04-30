@@ -1,43 +1,44 @@
 pipeline {
     agent any
 
-    environment {
-        SKIP_SONAR = "${params.SKIP_SONAR ?: 'false'}"
+    parameters {
+        booleanParam(name: 'SKIP_SONAR', defaultValue: true, description: 'Skip SonarQube analysis?')
     }
 
-    parameters {
-        booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: 'Skip SonarQube Analysis?')
+    environment {
+        SKIP_SONAR = "${params.SKIP_SONAR}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/sk-sohel01/rbcpoc.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/sk-sohel01/rbcpoc.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building the app..."
-                // Replace this with your real build commands if needed
+                echo 'Building the app...'
                 sh 'echo Build completed.'
             }
         }
 
         stage('SonarQube Analysis') {
             when {
-                expression { return params.SKIP_SONAR == false }
+                expression { return SKIP_SONAR != 'true' }
             }
             steps {
-                echo "Running SonarQube scan..."
-                // Replace with your real sonar-scanner or mvn sonar:sonar command
-                sh 'echo SonarQube scan done.'
+                echo 'Running SonarQube scan...'
+                // You can enable actual scanning here later
+                // withSonarQubeEnv('sonarqube') {
+                //     sh 'sonar-scanner'
+                // }
             }
         }
 
         stage('Post Build') {
             steps {
-                echo "Post build steps here"
+                echo 'Post build steps here'
             }
         }
     }
