@@ -5,10 +5,6 @@ pipeline {
     booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: 'Skip SonarQube analysis (Admins Only)')
   }
 
-  environment {
-    BUILD_USER_ID = "${env.BUILD_USER_ID}"
-  }
-
   stages {
     stage('Build') {
       steps {
@@ -16,29 +12,35 @@ pipeline {
       }
     }
 
+    stage('Authorize Sonar Skip') {
+      when {
+        expression { return params.SKIP_SONAR }
+      }
+      steps {
+        script {
+          def userInput = input(
+            id: 'SonarSkipApproval',
+            message: 'Do you want to skip SonarQube analysis?',
+            parameters: [],
+            submitter: 'admin,sksohel01'  // List of allowed Jenkins usernames
+          )
+        }
+      }
+    }
+
     stage('SonarQube Analysis') {
       when {
-        expression {
-          def auth = jenkins.model.Jenkins.instance.securityRealm.loadUser(env.BUILD_USER_ID)
-          def userAuth = auth.getAuthorities()
-          def isAdmin = userAuth.any { it.toString().toLowerCase().contains("admin") }
-
-          if (params.SKIP_SONAR && !isAdmin) {
-            error "Skipping SonarQube is restricted to Jenkins Admins only!"
-          }
-
-          return !params.SKIP_SONAR
-        }
+        expression { return !params.SKIP_SONAR }
       }
       steps {
         echo "Running SonarQube analysis..."
-        // Your sonar analysis logic
+        // sonar-scanner ...
       }
     }
 
     stage('Post Build') {
       steps {
-        echo "Post build tasks complete."
+        echo "Post build actions..."
       }
     }
   }
