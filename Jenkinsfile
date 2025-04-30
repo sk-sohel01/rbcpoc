@@ -1,15 +1,11 @@
-@Library('your-shared-lib-if-any') _
-
 pipeline {
   agent any
 
-  // Show parameter for all, but enforce logic inside
   parameters {
     booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: 'Skip SonarQube analysis (Admins Only)')
   }
 
   environment {
-    // Will be injected by plugin if installed
     BUILD_USER_ID = "${env.BUILD_USER_ID}"
   }
 
@@ -25,18 +21,18 @@ pipeline {
         expression {
           def auth = jenkins.model.Jenkins.instance.securityRealm.loadUser(env.BUILD_USER_ID)
           def userAuth = auth.getAuthorities()
-          def isAdmin = userAuth.any { it.toString().contains("admin") || it.toString().contains("Admin") }
+          def isAdmin = userAuth.any { it.toString().toLowerCase().contains("admin") }
 
           if (params.SKIP_SONAR && !isAdmin) {
             error "Skipping SonarQube is restricted to Jenkins Admins only!"
           }
 
-          return !params.SKIP_SONAR // run sonar if not skipped
+          return !params.SKIP_SONAR
         }
       }
       steps {
         echo "Running SonarQube analysis..."
-        // sonar analysis step
+        // Your sonar analysis logic
       }
     }
 
