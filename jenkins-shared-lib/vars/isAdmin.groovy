@@ -1,8 +1,7 @@
-import com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy
-import jenkins.model.Jenkins
-
 def call() {
     def userId = currentBuild.rawBuild.getCauses().find { it.userId }?.userId
+    println "🔍 Detected userId: ${userId}"
+
     if (!userId) return false
 
     def authStrategy = Jenkins.get().getAuthorizationStrategy()
@@ -10,9 +9,10 @@ def call() {
 
     def roleMap = authStrategy.getRoleMap(RoleBasedAuthorizationStrategy.GLOBAL)
     def adminRole = roleMap.getRole('admin')
-
     if (!adminRole) return false
 
     def assignedSids = roleMap.getSids(adminRole)
+    println "👥 Admin role assigned to: ${assignedSids}"
+
     return assignedSids.contains(userId)
 }
