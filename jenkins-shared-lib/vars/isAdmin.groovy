@@ -1,9 +1,14 @@
+import com.michelin.cio.hudson.plugins.rolestrategy.RoleBasedAuthorizationStrategy
+import jenkins.model.Jenkins
+
 def call() {
-    def userId = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId
-    if (!userId) return false
+  def userId = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId
+  if (!userId) return false
 
-    def user = jenkins.model.Jenkins.instance.getUser(userId)
-    if (!user) return false
+  def authStrategy = Jenkins.instance.getAuthorizationStrategy()
+  if (!(authStrategy instanceof RoleBasedAuthorizationStrategy)) return false
 
-    return user.getAuthorities().contains('admin')
+  def grantedRoles = authStrategy.getGrantedRoles(RoleBasedAuthorizationStrategy.GLOBAL)
+  def adminRole = grantedRoles.get('admin')  // role name must match exactly
+  return adminRole?.containsKey(userId)
 }
