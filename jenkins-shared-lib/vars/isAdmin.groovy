@@ -8,7 +8,6 @@ def call() {
   def authStrategy = Jenkins.instance.getAuthorizationStrategy()
   if (!(authStrategy instanceof RoleBasedAuthorizationStrategy)) return false
 
-  def grantedRoles = authStrategy.getGrantedRoles(RoleBasedAuthorizationStrategy.GLOBAL)
-  def adminRole = grantedRoles.get('admin')  // role name must match exactly
-  return adminRole?.containsKey(userId)
+  def roleMap = authStrategy.getGrantedRoles(RoleBasedAuthorizationStrategy.GLOBAL).get('admin')
+  return roleMap?.grantedRoles?.contains(userId)
 }
