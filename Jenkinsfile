@@ -14,18 +14,18 @@ pipeline {
   agent any
 
   environment {
-    IS_ADMIN = 'false'
+    IS_ADMIN = 'false'  // Default value, will be set in script
   }
 
   stages {
-    stage('Set Admin Flag') {
+    stage('Verify Admin Role') {
       steps {
         script {
           if (isAdmin()) {
             env.IS_ADMIN = 'true'
-            echo "User is admin. SKIP_SONAR allowed."
+            echo "✅ User is admin. SKIP_SONAR honored if set."
           } else {
-            echo "User is NOT admin. SKIP_SONAR will be ignored."
+            echo "⚠️ User is NOT admin. SKIP_SONAR will be ignored."
           }
         }
       }
@@ -33,25 +33,27 @@ pipeline {
 
     stage('Build') {
       steps {
-        echo 'Building application...'
+        echo '🚧 Building application...'
       }
     }
 
     stage('SonarQube Analysis') {
       when {
         expression {
-          // Only skip if SKIP_SONAR is true AND user is admin
+          // Run SonarQube stage if:
+          // - SKIP_SONAR is false, OR
+          // - SKIP_SONAR is true but user is not admin
           return !(params.SKIP_SONAR && env.IS_ADMIN == 'true')
         }
       }
       steps {
-        echo 'Running SonarQube Analysis...'
+        echo '🔍 Running SonarQube Analysis...'
       }
     }
 
     stage('Post Build') {
       steps {
-        echo 'Post build steps here...'
+        echo '📦 Post build steps here...'
       }
     }
   }
