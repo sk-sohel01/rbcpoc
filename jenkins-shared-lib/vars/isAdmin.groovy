@@ -3,6 +3,8 @@ import jenkins.model.Jenkins
 
 def call() {
     def userId = currentBuild.rawBuild.getCauses().find { it.userId }?.userId?.toLowerCase()
+    echo "👤 Triggered by: ${userId}"
+
     if (!userId) return false
 
     def authStrategy = Jenkins.instance.getAuthorizationStrategy()
@@ -13,5 +15,7 @@ def call() {
     if (!adminRole) return false
 
     def assignedSids = roleMap.getSids(adminRole)*.toLowerCase()
+    echo "🔐 Admin Role Assigned To: ${assignedSids}"
+
     return assignedSids.contains(userId)
 }
