@@ -1,3 +1,5 @@
+@Library('jenkins-shared-lib') _
+
 properties([
   parameters([
     booleanParam(
@@ -12,21 +14,18 @@ pipeline {
   agent any
 
   environment {
-    // default false, will be set true only if user is in admin group
     IS_ADMIN = 'false'
   }
 
   stages {
-    stage('Determine Admin') {
+    stage('Set Admin Flag') {
       steps {
         script {
-          def userId = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')[0]?.userId
-          def user = Jenkins.instance.getUser(userId)
-          if (user?.getAuthorities()?.contains('admin')) {
+          if (isAdmin()) {
             env.IS_ADMIN = 'true'
-            echo "User '${userId}' is admin."
+            echo "User is admin. SKIP_SONAR allowed."
           } else {
-            echo "User '${userId}' is NOT admin."
+            echo "User is NOT admin. SKIP_SONAR will be ignored."
           }
         }
       }
@@ -41,7 +40,7 @@ pipeline {
     stage('SonarQube Analysis') {
       when {
         expression {
-          // Only run if SKIP_SONAR is false OR user is not admin
+          // Only skip if SKIP_SONAR is true AND user is admin
           return !(params.SKIP_SONAR && env.IS_ADMIN == 'true')
         }
       }
