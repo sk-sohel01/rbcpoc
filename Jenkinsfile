@@ -21,11 +21,14 @@ pipeline {
     stage('Verify Admin Role') {
       steps {
         script {
+          def userId = currentBuild.rawBuild.getCauses().find { it.userId }?.userId
+          echo "👤 Triggered by: ${userId}"
+
           if (isAdmin()) {
             env.IS_ADMIN = 'true'
-            echo "✅ User is admin. SKIP_SONAR honored if set."
+            echo "✅ User '${userId}' is admin. SKIP_SONAR honored if set."
           } else {
-            echo "⚠️ User is NOT admin. SKIP_SONAR will be ignored."
+            echo "⚠️ User '${userId}' is NOT admin. SKIP_SONAR will be ignored."
           }
         }
       }
