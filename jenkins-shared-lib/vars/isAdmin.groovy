@@ -24,12 +24,13 @@ def call() {
     }
 
     def assignedSids = roleMap.getSids(adminRole)
-    echo "🔐 Raw assigned SIDs: ${assignedSids}"
     def normalizedSids = assignedSids*.toLowerCase()
-    echo "🔐 Normalized assigned SIDs: ${normalizedSids}"
+
+    echo "🔐 Raw Admin Role SIDs: ${assignedSids}"
+    echo "🔐 Normalized Admin Role SIDs: ${normalizedSids}"
 
     def result = normalizedSids.contains(userId)
-    echo result ? "✅ User '${userId}' has admin access" : "⚠️ User '${userId}' does NOT have admin access"
+    echo result ? "✅ '${userId}' is admin." : "❌ '${userId}' is NOT admin."
 
     return result
 }
