@@ -1,4 +1,4 @@
-@Library('jenkins-shared-lib') _
+@Library('jenkins-shared-lib@skip_sonar_admin_only') _
 
 properties([
   parameters([
