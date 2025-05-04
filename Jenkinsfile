@@ -1,10 +1,6 @@
 pipeline {
   agent any
 
-  parameters {
-    booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: '🔒 Admins Only: Skip SonarQube Analysis')
-  }
-
   stages {
 
     stage('Build') {
