@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   stages {
-
     stage('Build') {
       steps {
         echo "🚧 Building application..."
@@ -15,12 +14,14 @@ pipeline {
       }
       steps {
         script {
-          input(
-            id: 'SonarSkipApproval',
-            message: '🔐 Confirm SonarQube skip (Admins only)',
-            submitter: 'admin,sksohel01',  // Allowed usernames
-            ok: 'Yes, skip'
-          )
+          def userId = currentBuild.rawBuild.getCause(hudson.model.Cause.UserIdCause)?.getUserId()
+          echo "🔍 Build triggered by user: ${userId}"
+          
+          if (userId != 'sohel') {
+            error("❌ Unauthorized: Only admin (sohel) can skip SonarQube analysis.")
+          } else {
+            echo "✅ Admin authorization confirmed. Skipping SonarQube."
+          }
         }
       }
     }
@@ -31,7 +32,7 @@ pipeline {
       }
       steps {
         echo "🔍 Running SonarQube Analysis..."
-        // Add your sonar-scanner command here
+        // Add sonar-scanner command here
       }
     }
 
