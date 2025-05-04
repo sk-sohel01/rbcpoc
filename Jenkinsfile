@@ -2,13 +2,14 @@ pipeline {
   agent any
 
   parameters {
-    booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: 'Skip SonarQube analysis (Admins Only)')
+    booleanParam(name: 'SKIP_SONAR', defaultValue: false, description: '🔒 Admins Only: Skip SonarQube Analysis')
   }
 
   stages {
+
     stage('Build') {
       steps {
-        echo "Building application..."
+        echo "🚧 Building application..."
       }
     }
 
@@ -18,11 +19,11 @@ pipeline {
       }
       steps {
         script {
-          def userInput = input(
+          input(
             id: 'SonarSkipApproval',
-            message: 'Do you want to skip SonarQube analysis?',
-            parameters: [],
-            submitter: 'admin,sksohel01'  // List of allowed Jenkins usernames
+            message: '🔐 Confirm SonarQube skip (Admins only)',
+            submitter: 'admin,sksohel01',  // Allowed usernames
+            ok: 'Yes, skip'
           )
         }
       }
@@ -33,14 +34,14 @@ pipeline {
         expression { return !params.SKIP_SONAR }
       }
       steps {
-        echo "Running SonarQube analysis..."
-        // sonar-scanner ...
+        echo "🔍 Running SonarQube Analysis..."
+        // Add your sonar-scanner command here
       }
     }
 
     stage('Post Build') {
       steps {
-        echo "Post build actions..."
+        echo "📦 Post build actions..."
       }
     }
   }
