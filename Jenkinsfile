@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  environment {
+    GIT_REPO_URL = 'https://github.com/sk-sohel01/rbcpoc.git'
+    SKIP_LIST_FILE = 'pipeline-policy/sonar-skip-repos.txt'
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -8,19 +13,15 @@ pipeline {
       }
     }
 
-    stage('Authorize Sonar Skip') {
-      when {
-        expression { return params.SKIP_SONAR }
-      }
+    stage('Check Skip List') {
       steps {
         script {
-          def userId = currentBuild.rawBuild.getCause(hudson.model.Cause.UserIdCause)?.getUserId()
-          echo "🔍 Build triggered by user: ${userId}"
-          
-          if (userId != 'sohel') {
-            error("❌ Unauthorized: Only admin (sohel) can skip SonarQube analysis.")
+          def skipList = readFile(env.SKIP_LIST_FILE).readLines().collect { it.trim() }
+          if (skipList.contains(env.GIT_REPO_URL)) {
+            currentBuild.description = "✅ Skipped SonarQube (Repo Whitelisted)"
+            env.SKIP_SONAR = "true"
           } else {
-            echo "✅ Admin authorization confirmed. Skipping SonarQube."
+            env.SKIP_SONAR = "false"
           }
         }
       }
@@ -28,11 +29,11 @@ pipeline {
 
     stage('SonarQube Analysis') {
       when {
-        expression { return !params.SKIP_SONAR }
+        expression { return env.SKIP_SONAR != "true" }
       }
       steps {
         echo "🔍 Running SonarQube Analysis..."
-        // Add sonar-scanner command here
+        // sonar-scanner command goes here
       }
     }
 
