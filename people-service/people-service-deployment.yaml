@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: people-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: people-service
+  template:
+    metadata:
+      labels:
+        app: people-service
+    spec:
+      containers:
+        - name: people-service
+          image: sohelsk3/people-service:latest
+          ports:
+            - containerPort: 8081
