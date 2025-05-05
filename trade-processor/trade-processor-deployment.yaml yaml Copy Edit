@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trade-processor
+  template:
+    metadata:
+      labels:
+        app: trade-processor
+    spec:
+      containers:
+        - name: trade-processor
+          image: sohelsk3/trade-processor:latest
+          ports:
+            - containerPort: 8080
