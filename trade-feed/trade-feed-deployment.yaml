@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: trade-feed
-          image: sohelsk3/trade-feed:latest
+          image: sohelsk3/trade-feed:17
           ports:
             - containerPort: 4000
