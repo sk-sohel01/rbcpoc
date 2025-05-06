@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: reference-data
-          image: sohelsk3/reference-data:latest
+          image: sohelsk3/reference-data:16
           ports:
             - containerPort: 3000
