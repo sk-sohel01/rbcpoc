@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: database
-          image: sohelsk3/database:latest
+          image: sohelsk3/database:15
           ports:
             - containerPort: 18082
