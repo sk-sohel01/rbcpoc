@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: people-service
-          image: sohelsk3/people-service:18
+          image: sohelsk3/people-service:29
           ports:
             - containerPort: 8081
