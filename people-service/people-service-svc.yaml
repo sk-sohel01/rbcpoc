@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: people-service
+  namespace: traderx
+spec:
+  selector:
+    app: people-service
+  ports:
+    - protocol: TCP
+      port: 18089         # Exposes the service at port 8080 (external)
+      targetPort: 18089   # Forwards to containerPort 8081 (internal)
+
