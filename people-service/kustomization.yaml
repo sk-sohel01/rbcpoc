@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - people-service-deployment.yaml
+  - people-service-svc.yaml
+
+images:
+  - name: sohelsk3/people-service
+    newTag: "33"
+
