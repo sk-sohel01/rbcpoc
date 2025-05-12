@@ -13,5 +13,10 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = 'account-service'
+rootProject.name = 'tradex-demo'
 
+include 'account-service',
+        'database',
+        'position-service',
+        'trade-processor',
+        'trade-service'
