@@ -13,3 +13,6 @@ spec:
     namespace: flux-system
   targetNamespace: traderx
   timeout: 2m
+images:
+    - name: sohelsk3/people-service
+      newTag: "54"
