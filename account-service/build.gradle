@@ -28,7 +28,7 @@ subprojects {
     sonarqube {
         properties {
             property "sonar.projectKey", "${project.name}"
-            property "sonar.host.url", "http://your-sonarqube-url"
+            property "sonar.host.url", "http://host.docker.internal:9000"
             property "sonar.login", System.getenv("SONAR_TOKEN")
         }
     }
