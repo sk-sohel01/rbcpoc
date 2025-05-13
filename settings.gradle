@@ -1,3 +1,9 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
@@ -14,4 +20,3 @@ project(':position-service').projectDir = file('position-service')
 project(':trade-processor').projectDir = file('trade-processor')
 project(':trade-service').projectDir = file('trade-service')
 project(':database').projectDir = file('database')
-
