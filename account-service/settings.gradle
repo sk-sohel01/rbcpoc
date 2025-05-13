@@ -20,3 +20,8 @@ include 'account-service',
         'position-service',
         'trade-processor',
         'trade-service'
+project(':account-service').projectDir = file('account-service')
+project(':database').projectDir = file('database')
+project(':position-service').projectDir = file('position-service')
+project(':trade-processor').projectDir = file('trade-processor')
+project(':trade-service').projectDir = file('trade-service')

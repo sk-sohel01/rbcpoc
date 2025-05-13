@@ -1,8 +1,17 @@
 dependencyResolutionManagement {
     repositories {
-        // Use Maven Central for resolving dependencies.
         mavenCentral()
     }
 }
 
-include 'account-service','position-service','trade-processor','trade-service','database'
+rootProject.name = 'tradex-demo'
+
+include 'account-service', 'position-service', 'trade-processor', 'trade-service', 'database'
+
+// Optional: Explicit project directory mapping (helps avoid surprises)
+project(':account-service').projectDir = file('account-service')
+project(':position-service').projectDir = file('position-service')
+project(':trade-processor').projectDir = file('trade-processor')
+project(':trade-service').projectDir = file('trade-service')
+project(':database').projectDir = file('database')
+
