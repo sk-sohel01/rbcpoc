@@ -7,5 +7,5 @@ resources:
 
 images:
   - name: sohelsk3/account-service
-    newTag: "v2"
+    newTag: "77"
 
