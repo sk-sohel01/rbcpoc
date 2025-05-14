@@ -95,4 +95,9 @@ public class AccountUserController {
 	public ResponseEntity<String> generalError(Exception e) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
+	@GetMapping("/health")
+	public ResponseEntity<String> healthCheck() {
+    		return ResponseEntity.ok("✅ AccountUserController is healthy — version 2");
+}
+
 }
