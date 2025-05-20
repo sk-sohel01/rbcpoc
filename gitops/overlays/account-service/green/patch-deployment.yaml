@@ -11,3 +11,9 @@ spec:
       containers:
         - name: account-service
           image: sohelsk3/account-service:build-28
+          ports:
+            - containerPort: 18088
+          env:
+            - name: ACCOUNT_SERVICE_PORT
+              value: "18088"
+
