@@ -10,4 +10,4 @@ spec:
     spec:
       containers:
         - name: account-service
-          image: sohelsk3/account-service:latest
+          image: sohelsk3/account-service:build-28
