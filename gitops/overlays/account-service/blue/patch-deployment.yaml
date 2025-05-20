@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-service
+spec:
+  template:
+    metadata:
+      labels:
+        version: blue
+    spec:
+      containers:
+        - name: account-service
+          image: sohelsk3/account-service:stable

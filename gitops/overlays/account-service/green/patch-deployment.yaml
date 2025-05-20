@@ -3,19 +3,11 @@ kind: Deployment
 metadata:
   name: account-service
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: account-service
   template:
     metadata:
       labels:
-        app: account-service
+        version: green
     spec:
       containers:
         - name: account-service
           image: sohelsk3/account-service:latest
-          imagePullPolicy: Always      # 👈 ADD THIS LINE
-          ports:
-            - containerPort: 18088
-
