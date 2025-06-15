@@ -15,11 +15,14 @@ pipeline {
     stage('Run Unit Tests') {
       steps {
         sh '''
-          pip3 install pytest
-          pytest tests/ --maxfail=1 --disable-warnings -q
-        '''
-      }
+        apt-get update
+        apt-get install -y python3 python3-pip
+        python3 -m pip install pytest
+        pytest tests/ --maxfail=1 --disable-warnings -q
+       '''
     }
+  }
+
 
     stage('Run Stateful Pipeline') {
       steps {

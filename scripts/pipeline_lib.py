@@ -17,13 +17,14 @@ def save_state(state, job_id):
     with open(get_state_file(job_id), 'w') as f:
         json.dump(state, f, indent=2)
 
-def acquire_lock(job_id):
-    lockfile = f"/tmp/pipeline-{job_id}.lock"
-    if os.path.exists(lockfile):
-        print(f"❌ Another pipeline with JOB_ID '{job_id}' is already running.")
+def acquire_lock(job_id, lock_path=None):
+    lock_path = lock_path or f"/tmp/pipeline-{job_id}.lock"
+    if os.path.exists(lock_path):
+        print(f"🚫 Lock exists: {lock_path}")
         sys.exit(1)
-    open(lockfile, 'w').write('locked')
-    return lockfile
+    with open(lock_path, 'w') as f:
+        f.write("locked")
+    print(f"🔐 Acquired lock: {lock_path}")
 
 def release_lock(lockfile):
     if os.path.exists(lockfile):
