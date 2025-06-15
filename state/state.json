@@ -1,0 +1,18 @@
+{
+  "step1": {
+    "status": "done",
+    "output": "result_of_step1"
+  },
+  "step2": {
+    "status": "done",
+    "output": "result_of_step2"
+  },
+  "step3": {
+    "status": "done",
+    "output": "result_of_step3"
+  },
+  "step4": {
+    "status": "done",
+    "output": "result_of_step4"
+  }
+}
