@@ -2,34 +2,36 @@ pipeline {
   agent any
 
   parameters {
-    string(name: 'JOB_ID', defaultValue: 'demo-job', description: 'Unique Job ID for this pipeline run')
-  }
-
-  environment {
-    PYTHONPATH = "${env.WORKSPACE}/scripts"
+    string(name: 'JOB_ID', defaultValue: 'demo-job', description: 'Unique Job ID for state tracking and locking')
   }
 
   stages {
-    stage('Install Dependencies') {
+    stage('Checkout') {
       steps {
-        sh 'which python3 || sudo apt-get install python3 -y'
+        git branch: 'stateful-pipeline', url: 'https://github.com/sk-sohel01/rbcpoc.git'
       }
     }
 
-    stage('Run State-Aware Pipeline') {
+    stage('Run Unit Tests') {
       steps {
-        dir('stateful-pipeline-demo') {
-          sh 'python3 scripts/state_aware_pipeline.py --job-id $JOB_ID'
-        }
+        sh '''
+          pip3 install pytest
+          pytest tests/ --maxfail=1 --disable-warnings -q
+        '''
+      }
+    }
+
+    stage('Run Stateful Pipeline') {
+      steps {
+        sh 'python3 scripts/state_aware_pipeline.py --job-id $JOB_ID'
       }
     }
 
     stage('Show Final State') {
       steps {
-        dir('stateful-pipeline-demo') {
-          sh 'cat state/state.json'
-        }
+        sh 'cat state/state.json || echo "No state file found."'
       }
     }
   }
 }
+
